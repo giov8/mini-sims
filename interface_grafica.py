@@ -1,5 +1,6 @@
 import tkinter as tk
-from mini_sims import Personagem
+from tkinter import messagebox
+from mini_sims import Personagem, Trabalho
 
 class SimsApp:
     # Construtor
@@ -25,11 +26,16 @@ class SimsApp:
         self.btn_dormir = tk.Button(root, text="💤 Dormir", command=self.acao_botao_dormir)
         self.btn_dormir.pack(pady= 5)
 
+
         self.btn_tomar_banho = tk.Button(root, text="🚿 Tomar banho", command=self.acao_botao_tomar_banho)
         self.btn_tomar_banho.pack(pady= 5)
 
+        self.btn_procurar_emprego = tk.Button(root, text="Procurar emprego", command=self.acao_botao_procurar_emprego)
+        self.btn_procurar_emprego.pack(pady= 5)
+
         self.label_mensagem = tk.Label(root, text="", font=("Arial", 10))
         self.label_mensagem.pack()
+
 
     # Método que atualiza os status do personagem
     def atualizar_status(self):
@@ -57,6 +63,58 @@ class SimsApp:
         mensagem = self.personagem.tomar_banho()
         self.label_mensagem.config(text=mensagem)
         self.atualizar_status()
+    
+    def acao_botao_procurar_emprego(self):
+        self.trabalhos = self.criar_trabalhos()
+        for trabalho in self.trabalhos:
+            mensagem = trabalho.informacoes
+            resposta = messagebox.askquestion("Oferta de emprego", message=mensagem)
+            if resposta == "yes":
+                mensagem_sucesso = f"Parabéns, você foi contratado na carreira de {trabalho.carreira}."
+                messagebox.showinfo("Oferta de emprego", mensagem_sucesso)
+                self.personagem.ser_contratado(trabalho)
+                self.atualizar_status()
+                return
+        messagebox.showerror("Oferta de emprego", "Não há mais empregos disponíveis")
+        self.atualizar_status()
+        return    
+
+
+    def criar_trabalhos(self):
+        lista_trabalhos = []
+        carreira = "Músico"
+        cargos = ["Cantor de Rua", "Artista Independente", "Pop Star"]
+        salarios = [100, 1000, 20000]
+        higiene = 30
+        energia = 50
+        mental = 20
+        objeto_trabalho = Trabalho(carreira, cargos, salarios, higiene, energia, mental)
+        mensagem = objeto_trabalho.informacoes
+        # O comando append adiciona um objeto a lista
+        lista_trabalhos.append(objeto_trabalho)
+
+        carreira = "Pedreiro"
+        cargos = ["Servente", "Pedreiro", "Mestre de Obra"]
+        salarios = [200, 300, 1000]
+        higiene = 70
+        energia = 60
+        mental = 10
+        objeto_trabalho = Trabalho(carreira, cargos, salarios, higiene, energia, mental)
+        mensagem = objeto_trabalho.informacoes
+        # O comando append adiciona um objeto a lista
+        lista_trabalhos.append(objeto_trabalho)
+
+        carreira = "Desenvolvedor de Software"
+        cargos = ["Júnior", "Pleno", "Senior"]
+        salarios = [100, 300, 2000]
+        higiene = 10
+        energia = 50
+        mental = 50
+        objeto_trabalho = Trabalho(carreira, cargos, salarios, higiene, energia, mental)
+        mensagem = objeto_trabalho.informacoes        # O comando append adiciona um objeto a lista
+        lista_trabalhos.append(objeto_trabalho)
+
+        return lista_trabalhos
 
 # Rodar o App
 if __name__ == "__main__":
